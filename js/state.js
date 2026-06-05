@@ -1,18 +1,29 @@
+// Global state management
 const STATE = {
-  sessionId: "",
-  participantId: "",
-  version: "demo",
+  sessionId: '',
+  participantId: '',
+  version: 'demo',
   currentPageIndex: 0,
   dataLog: [],
+  pageState: {},
   isPaused: false,
   pausedAt: null,
 
   resetSession() {
-    this.sessionId = "NCAT-" + Date.now();
-    this.participantId = "";
-    this.version = "demo";
+    this.sessionId = 'NCAT-' + Date.now();
+    this.participantId = '';
+    this.version = 'demo';
     this.currentPageIndex = 0;
     this.dataLog = [];
+    this.pageState = {
+      setupComplete: false,
+      consentGiven: false,
+      aftDetails: null,
+      scientificResponses: [],
+      faceToColourResponses: [],
+      colourToFaceResponses: [],
+      indianMemoryResponses: []
+    };
     this.isPaused = false;
     this.pausedAt = null;
 
@@ -20,7 +31,7 @@ const STATE = {
   },
 
   getCurrentPageName() {
-    return CONFIG.PAGES[this.currentPageIndex] || "setup";
+    return CONFIG.PAGES[this.currentPageIndex] || 'setup';
   },
 
   nextPage() {
@@ -48,21 +59,22 @@ const STATE = {
   },
 
   logEvent(eventType, details = {}) {
-    this.dataLog.push({
+    const event = {
       session_id: this.sessionId,
       participant_id: this.participantId,
       event_type: eventType,
       page: this.getCurrentPageName(),
       timestamp: new Date().toISOString(),
       ...details
-    });
+    };
+    this.dataLog.push(event);
 
-    if (typeof STORAGE !== "undefined") {
+    if (typeof STORAGE !== 'undefined') {
       STORAGE.autoSave();
     }
   },
 
-  logSkip(taskName, reason = "not_specified") {
+  logSkip(taskName, reason = 'not_specified') {
     this.logEvent(CONFIG.EVENT_TYPES.SKIP, {
       task_name: taskName,
       skip_reason: reason
