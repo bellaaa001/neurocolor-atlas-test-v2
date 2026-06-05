@@ -1,5 +1,6 @@
+// Local storage management
 const STORAGE = {
-  KEY: "neurocolor_atlas_v2_session",
+  KEY: 'neurocolor_atlas_v2_session',
 
   autoSave() {
     try {
@@ -11,12 +12,13 @@ const STORAGE = {
           version: STATE.version,
           currentPageIndex: STATE.currentPageIndex,
           dataLog: STATE.dataLog,
+          pageState: STATE.pageState,
           isPaused: STATE.isPaused,
           pausedAt: STATE.pausedAt
         })
       );
     } catch (error) {
-      console.error("Autosave failed:", error);
+      console.error('Autosave failed:', error);
     }
   },
 
@@ -30,17 +32,18 @@ const STORAGE = {
 
       if (!saved) return false;
 
-      STATE.sessionId = saved.sessionId || "";
-      STATE.participantId = saved.participantId || "";
-      STATE.version = saved.version || "demo";
+      STATE.sessionId = saved.sessionId || '';
+      STATE.participantId = saved.participantId || '';
+      STATE.version = saved.version || 'demo';
       STATE.currentPageIndex = saved.currentPageIndex || 0;
       STATE.dataLog = saved.dataLog || [];
+      STATE.pageState = saved.pageState || {};
       STATE.isPaused = saved.isPaused || false;
       STATE.pausedAt = saved.pausedAt || null;
 
       return true;
     } catch (error) {
-      console.error("Restore failed:", error);
+      console.error('Restore failed:', error);
       return false;
     }
   },
