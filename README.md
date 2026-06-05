@@ -1,6 +1,8 @@
 # NeuroColor Atlas Test – Research Version 2
 
-A dementia-friendly, modular static GitHub Pages application for neurodevelopmental colour perception and face recognition research. Implements Stages 1-3 with complete scientific stimulus control, facial expression associations, cultural colour memory, and secure client-side data management.
+A dementia-friendly, modular browser-based research application for investigating colour perception, colour–emotion associations, facial-emotion associations, and culturally grounded chromatic memory in healthy aging, mild cognitive impairment, and early dementia.
+
+**Research Prototype Only.** This is not a diagnostic instrument. See [Research Use and Validation Status](#research-use-and-validation-status) below.
 
 ## Features
 
@@ -14,7 +16,7 @@ A dementia-friendly, modular static GitHub Pages application for neurodevelopmen
 ✅ **Passive Colour Exposure Protocol**
 - Full-screen neutral baseline (3s) → colour stimulus (4s) → rating → washout (6s)
 - Fullscreen mode with hidden UI during passive exposure
-- Automatic timing and precise timestamp logging
+- Automatic timing with browser-generated timestamps
 - Mandatory 30-second break after trial 8 (Full Version)
 
 ✅ **Emotion Rating System**
@@ -25,7 +27,7 @@ A dementia-friendly, modular static GitHub Pages application for neurodevelopmen
 
 ✅ **Face-to-Colour Association**
 - 6 facial emotions (Happiness, Sadness, Anger, Fear, Disgust, Neutral)
-- SVG schematic faces (no emojis)
+- SVG schematic faces (no emojis) – prototype stimuli, pilot validation pending
 - 12-colour selection grid (large, dementia-friendly)
 - Skip item, skip task, pause/resume controls
 
@@ -37,11 +39,11 @@ A dementia-friendly, modular static GitHub Pages application for neurodevelopmen
 ✅ **Indian Chromatic Memory Task**
 - 10 pilot cultural colours (Kumkum red, Haldi yellow, Kesari, Marigold, Mehendi, Indigo, Peacock, Chandan, Terracotta, Jasmine)
 - CIELAB targets with provisional RGB/HEX display
-- 4 questions per colour:
+- 4 core questions per colour:
   1. Familiarity (Yes/No/Not sure)
-  2. Memory association with category selection
-  3. Emotional valence (Pleasant/Neutral/Unpleasant)
-  4. Free-text memory description when "Other" selected
+  2. Presence of a memory association
+  3. Memory-association category (with free-text follow-up when "Other" is selected)
+  4. Emotional valence (Pleasant/Neutral/Unpleasant)
 - 30 predefined memory categories
 
 ✅ **Dementia-Friendly Design**
@@ -51,18 +53,19 @@ A dementia-friendly, modular static GitHub Pages application for neurodevelopmen
 - Simple, clear navigation
 - Clear skip, pause, resume, and stop controls on all optional tasks
 
-✅ **Secure Data Management**
-- All data stays in browser (no server, no external APIs, no GitHub upload)
+✅ **Local Client-Side Data Management**
+- All data stays in browser (no intentional server transmission, no external APIs)
 - Central dataLog array with all events timestamped
 - Automatic localStorage saving after every response/skip/pause/resume
 - Session recovery on page reload with researcher confirmation
 - CSV export: `ParticipantID_behavioural_YYYY-MM-DD.csv`
 - Backup before clearing, safe session wipe
+- **Disclaimer:** localStorage and downloaded CSV files are not encrypted by default and must be stored on an institutionally approved, access-controlled device.
 
 ✅ **Complete Event Logging**
 - participant_id, test_version, trial/item numbers
 - Stimulus ID, CIELAB, CIELCh, RGB, HEX, gamut status
-- Baseline/passive/rating/washout timestamps
+- Baseline/passive/rating/washout timestamps (ISO 8601 wall-clock and monotonic durations)
 - Response data (valence, arousal, emotion, intensity)
 - Skip reason, pause/resume, stop reason
 - Response time (ms)
@@ -102,13 +105,13 @@ neurocolor-atlas-test-v2/
 ## Pages (Complete Flow)
 
 1. **Researcher and Participant Setup** – Participant code, version selection (Full/Short/Demo)
-2. **Consent Confirmation** – Mandatory 3-checkbox consent
+2. **Consent Confirmation** – Continuation is permitted only when participant consent or an IEC-approved legally authorized representative consent pathway has been completed. The application does not replace the formal informed-consent process.
 3. **AFT Reference & Synchronization** – Separate AFT module with start times
 4. **Practice Trial** – Placeholder for practice task
 5. **Scientific Colour Task** – Full or Short version, 16 or 8 trials, passive exposure + rating
 6. **Face-to-Colour Association** – 6 emotions, 12-colour grid
 7. **Colour-to-Face Association** – 6 colours (6 items), grayscale faces
-8. **Indian Chromatic Memory Task** – 10 cultural colours, 4 questions each
+8. **Indian Chromatic Memory Task** – 10 cultural colours, 4 core questions each, with conditional free-text follow-up
 9. **Final Summary & CSV Download** – Statistics, download, session clear
 
 ## Controls on All Tasks
@@ -138,7 +141,10 @@ intensity_score, trial_status, skip_status, skip_reason, timestamp
 **File naming:**
 - `ParticipantID_behavioural_YYYY-MM-DD.csv`
 - All times in ISO 8601 format
-- No participant names, phone numbers, or identifiable details
+
+**Participant Identification:**
+- No direct identifiers such as participant names, telephone numbers, hospital numbers, or contact details are collected.
+- The CSV includes a coded participant ID for research linkage.
 
 ## Colour Conversion
 
@@ -155,7 +161,11 @@ intensity_score, trial_status, skip_status, skip_reason, timestamp
 - Converted using same pipeline
 - Marked as provisional until physical spectrophotometer measurement
 
-**⚠️ Important:** All RGB/HEX values displayed in the browser are **provisional** until the monitor is calibrated and colours are measured with a spectrophotometer. CIELAB and CIELCh targets are the scientific reference.
+**Stimulus Display Clarification:**
+- Stimulus IDs and colour-space values must not be displayed during passive full-screen exposure because text and local contrast may influence gaze and pupillary response.
+- Scientific colour values are displayed only on the response or researcher screen and stored in the CSV.
+
+**⚠️ Important:** All RGB/HEX values displayed in the browser are **provisional** until the monitor is calibrated and colours are measured with a spectrophotometer. CIELAB and CIELCh targets are definitive; browser RGB representation is for visual guidance only.
 
 ## Session Recovery
 
@@ -183,13 +193,14 @@ python -m http.server 8000  # or: npx http-server
 # Open browser: http://localhost:8000
 ```
 
-## Privacy & Security
+## Privacy & Data Handling
 
-✅ **No data sent to GitHub or any server**
-- All processing happens in the browser
+✅ **No participant-response data transmitted intentionally to GitHub or external servers**
+- All participant processing happens in the browser
 - localStorage stores data locally only
 - CSV downloaded to local disk
 - No network requests except to load static files
+- **Note:** Because the application is hosted on GitHub Pages, ordinary hosting access logs may still be generated by the hosting platform.
 
 ✅ **Participant anonymity**
 - Participant codes only (no names, IDs, phone)
@@ -200,13 +211,39 @@ python -m http.server 8000  # or: npx http-server
 - localStorage is browser-local only
 - Clear session after download with confirmation
 - Backup available before clearing
+- **Important:** localStorage and downloaded CSV files are not encrypted by default and must be stored on an institutionally approved, access-controlled device.
 
 ## Browser Support
 
 - Chrome (tested, recommended)
 - Firefox, Edge, Safari (modern versions)
 - Requires ES6 support and localStorage
-- Works offline after first load (static files only)
+- Designed for static browser use. Reliable offline operation must be separately tested or implemented using a local web server or service-worker-based offline mode.
+
+## Timing and Stimulus Accuracy
+
+### Browser Timing
+
+The application records browser-generated timestamps and response times with millisecond-valued resolution. Actual stimulus timing accuracy must be validated on the study computer and should not be assumed to equal laboratory-grade hardware timing.
+
+**Wall-clock and monotonic timing:**
+- ISO 8601 timestamps are recorded for alignment with separate AFT and eye-tracking files.
+- Monotonic browser timing, such as performance.now(), is used for within-task durations and response-time calculations.
+
+### Passive Exposure Timing
+
+- Baseline, passive exposure, and washout durations: millisecond resolution (performance.now())
+- Break timers: ~1-second accuracy (setTimeout)
+- Response times: browser-dependent (typically ±50ms)
+- Independent validation with eye-tracking or hardware timing is strongly recommended
+
+## Stimulus Control
+
+**Structured scientific stimulus specification:**
+- CIELCh/CIELAB targets with provisional RGB/HEX display
+- Pending physical monitor calibration and validation
+- Schematic facial-expression stimuli are prototype stimuli and have not yet been independently validated for emotion-recognition accuracy in healthy older adults, MCI, or dementia populations.
+- **Pilot validation is required before inferential use.**
 
 ## Calibration & Validation Notes
 
@@ -226,43 +263,54 @@ Out-of-gamut colours are flagged in the CSV:
 - Check HEX value; if clipped, consider target revision
 - Scientific interpretation may differ from visual presentation
 
-### Timing Accuracy
+## Pre-Pilot Verification Checklist
 
-- Passive exposure timestamps: millisecond precision (performance.now())
-- Break timers: ~1-second accuracy (setTimeout)
-- Response times: browser-dependent (typically ±50ms)
-- Recommend independent eye-tracking or HRV logging for precise alignment
-
-## Quality Checklist (Stage 3 Complete)
-
-✅ All pages navigate without getting stuck
-✅ Every optional task has Skip button
-✅ Pause and Resume tested and working
-✅ Stop Test safely halts and goes to summary
-✅ localStorage recovery tested and working
-✅ Fullscreen mode exits safely (ESC key)
-✅ CSV contains complete stimulus, response, timing data
-✅ No participant identifiers in CSV
-✅ Site works on GitHub Pages and Chrome
-✅ All buttons large (50+ px) and dementia-friendly
-✅ High contrast maintained throughout
-✅ No server logs or external uploads
+* [ ] All pages navigate without getting stuck
+* [ ] Every optional task has Skip button
+* [ ] Pause and Resume tested and working
+* [ ] Stop Test safely halts and goes to summary
+* [ ] localStorage recovery tested and working
+* [ ] Fullscreen mode exits safely (ESC key)
+* [ ] CSV contains complete stimulus, response, timing data
+* [ ] No direct identifiers (names, phone, hospital numbers) in CSV
+* [ ] Coded participant ID present for research linkage
+* [ ] Site works on GitHub Pages and Chrome
+* [ ] All buttons large (50+ px) and dementia-friendly
+* [ ] High contrast maintained throughout
+* [ ] No intentional participant-response data transmission to external servers
 
 ## Known Limitations
 
-- HRV not calculated in browser (timestamps only for later alignment)
+- HRV not calculated in browser (timestamps only for later alignment with separate recordings)
 - Colours not absolutely calibrated until monitor measurement
 - Fullscreen mode requires user gesture (click required)
 - localStorage limited by browser (typically 5-10 MB)
 - No multi-participant session isolation (single researcher, single PC)
+- Schematic facial-expression stimuli require pilot validation in target populations
 
 ## Future Enhancements (Beyond Stage 3)
 
 - Stage 4: Eye-tracking integration
-- Stage 5: Real-time HRV calculation
+- Improved synchronization with separate AFT, ECG, EDA, and eye-tracking recordings
 - Stage 6: Multi-site data synchronization (encrypted)
 - Stage 7: Advanced statistical analysis
 - Stage 8: Machine learning integration
+
+## Research Use and Validation Status
+
+**This is a research prototype only and must not be used as a diagnostic instrument.**
+
+Before using this application for participant testing, ensure:
+
+* ✓ Research prototype status acknowledged
+* ✓ Application is not a diagnostic instrument
+* ✓ Monitor calibration completed and documented
+* ✓ Browser timing validated on study computer
+* ✓ Schematic facial-expression stimuli pilot-validated in target populations (healthy older adults, MCI, dementia)
+* ✓ AFT and eye-tracking recorded separately via dedicated hardware/software
+* ✓ IEC (or equivalent ethics committee) approval obtained
+* ✓ Formal informed-consent process completed before participant testing
+* ✓ Data storage on institutionally approved, access-controlled device
 
 ## Study Design & Citation
 
